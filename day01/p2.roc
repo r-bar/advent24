@@ -38,13 +38,13 @@ updateCount = \entry ->
 parseLine : Str -> { left: I64, right: I64 }
 parseLine = \line ->
     Str.splitOn line "   "
-    |> List.map (\part -> Str.toI64 part)
+    |> List.map Str.toI64
     |> \parts -> when parts is
         [Ok a, Ok b] -> { left: a, right: b }
         _ -> crash "invalid input"
 
 
-rotate : List { left: I64, right: I64 } -> { left: List I64, right: List I64 }
+rotate : List { left: a, right: b } -> { left: List a, right: List b }
 rotate = \pairs ->
     left = List.map pairs (\pair -> pair.left)
     right = List.map pairs (\pair -> pair.right)
