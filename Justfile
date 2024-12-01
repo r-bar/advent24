@@ -1,4 +1,5 @@
-BASE_URL := "https://adventofcode.com/2024"
+YEAR := "2024"
+BASE_URL := "https://adventofcode.com/{{YEAR}}"
 COOKIE := env_var("COOKIE")
 TODAY := `printf '%-d' $(date +%e)`
 
@@ -96,3 +97,11 @@ test num:
 # remove temporary files
 clean:
   rm -r tmp
+
+
+# post an answer to the advent of code website and save it to answers.txt
+answer answer day=TODAY:
+  curl --fail-with-body -X POST -H "Cookie: {{COOKIE}}" \
+    -d "answer={{answer}}" \
+    {{BASE_URL}}/day/{{day}}/answer
+  echo {{answer}} >> $(just day-dir {{day}})/answers.txt
