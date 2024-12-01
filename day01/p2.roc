@@ -12,15 +12,27 @@ main =
         [progname, ..] -> crash "Usage: $(progname) <input_file>"
         [] -> crash "unreachable"
     input = File.readUtf8! inputFile
-    answer = parseInput input
-        |> leftAndRight List.sortAsc
-        |> \{ left, right } -> List.map2 left right (\a, b -> Num.abs (a - b))
-        |> List.sum
+    parsed = parseInput input
+    counts = itemCounts parsed.right
+    answer = List.walk parsed.left 0 \accum, item ->
+        when Dict.get counts item is
+            Err KeyNotFound -> accum
+            Ok count -> (Num.toI64 count) * item
+                |> Num.add accum
     Stdout.line! (Inspect.toStr answer)
 
 
-leftAndRight : { left: a, right: a }, (a -> b) -> { left: b, right: b }
-leftAndRight = \{ left, right }, f -> { left: f left, right: f right }
+itemCounts : List a -> Dict a U64 where a implements Hash & Eq
+itemCounts = \list ->
+    List.walk list (Dict.empty {}) \accum, item ->
+        Dict.update accum item updateCount
+    
+
+updateCount : Result U64 [Missing] -> Result U64 [Missing]
+updateCount = \entry ->
+    when entry is
+        Err Missing -> Ok 1
+        Ok count -> Ok (count + 1)
 
 
 parseLine : Str -> { left: I64, right: I64 }
