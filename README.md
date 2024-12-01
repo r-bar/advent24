@@ -22,7 +22,8 @@ This cookie is fairly long lived and can be extracted from the `Cookie` header
 for any request to adventofcode.com after you are logged in. The set the
 `COOKIE` environment variable with this session value
 
-When ready for the next section you can update the readme with `just part2`.
+When ready for part 2 you can update the day's README with the extended prompt
+using `just part2`.
 
 Most of the `just` commands accept the day number as the first argument. This
 only needs to be specified if the command is not run on the same day as the
