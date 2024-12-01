@@ -13,35 +13,16 @@ main =
         [] -> crash "unreachable"
     input = File.readUtf8! inputFile
     answer = parseInput input
-        |> leftAndRight List.sortAsc
-        |> \{ left, right } -> List.map2 left right (\a, b -> Num.abs (a - b))
-        |> List.sum
     Stdout.line! (Inspect.toStr answer)
 
 
-leftAndRight : { left: a, right: a }, (a -> b) -> { left: b, right: b }
-leftAndRight = \{ left, right }, f -> { left: f left, right: f right }
-
-
-parseLine : Str -> { left: I64, right: I64 }
+parseLine : Str -> List Str
 parseLine = \line ->
-    Str.splitOn line "   "
-    |> List.map (\part -> Str.toI64 part)
-    |> \parts -> when parts is
-        [Ok a, Ok b] -> { left: a, right: b }
-        _ -> crash "invalid input"
+    Str.splitOn line " "
 
 
-rotate : List { left: I64, right: I64 } -> { left: List I64, right: List I64 }
-rotate = \pairs ->
-    left = List.map pairs (\pair -> pair.left)
-    right = List.map pairs (\pair -> pair.right)
-    { left, right }
-
-
-parseInput : Str -> { left: List I64, right: List I64 }
+parseInput : Str -> List List Str
 parseInput = \input ->
     Str.splitOn input "\n"
     |> List.dropIf (\line -> line == "")
     |> List.map parseLine
-    |> rotate
