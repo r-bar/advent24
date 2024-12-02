@@ -1,5 +1,5 @@
 YEAR := "2024"
-BASE_URL := "https://adventofcode.com/{{YEAR}}"
+BASE_URL := "https://adventofcode.com/2024"
 COOKIE := env_var("COOKIE")
 # the AoC day unlocks at midnight EST
 TODAY := `printf '%-d' $(TZ=America/New_York date +%e)`
@@ -104,5 +104,6 @@ clean:
 answer answer day=TODAY:
   curl --fail-with-body -X POST -H "Cookie: {{COOKIE}}" \
     -d "answer={{answer}}" \
-    {{BASE_URL}}/day/{{day}}/answer
+    {{BASE_URL}}/day/{{day}}/answer \
+  | pandoc -f html -t plain
   echo {{answer}} >> $(just day-dir {{day}})/answers.txt

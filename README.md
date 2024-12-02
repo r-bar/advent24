@@ -40,6 +40,7 @@ part2` to update the day's README with the extended prompt.
 
 ```sh
 just answer $(roc p1.roc -- input.txt)
+just part2
 ```
 
 
