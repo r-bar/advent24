@@ -55,13 +55,13 @@ safe = \diffs ->
 
 permutations : List a -> List (List a)
 permutations = \list ->
-    permutationsHelp list 0
+    permutationsHelp [] list 0
 
 
-permutationsHelp: List a, U64 -> List (List a)
-permutationsHelp = \list, dropNth ->
-    if dropNth >= List.len list then
-        [list]
+permutationsHelp: List (List a), List a, U64 -> List (List a)
+permutationsHelp = \accum, base, dropNth ->
+    if dropNth >= List.len base then
+        List.prepend accum base
     else
-        [List.dropAt list dropNth]
-        |> List.concat (permutationsHelp list (dropNth + 1))
+        List.append accum (List.dropAt base dropNth)
+        |> permutationsHelp base (dropNth + 1)
