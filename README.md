@@ -29,7 +29,8 @@ Most of the `just` commands accept the day number as the first argument. This
 only needs to be specified if the command is not run on the same day as the
 challenge.
 
-## Run the code (day 5, part 1)
+## Run the code
+Example for day 5, part 1:
 ```
 cd day05
 roc p1.roc -- input.txt
