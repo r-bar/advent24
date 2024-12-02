@@ -48,9 +48,9 @@ safe : List I64 -> Bool
 safe = \diffs ->
     allPositive = List.all diffs (\x -> x > 0)
     allNegative = List.all diffs (\x -> x < 0)
-    lessThan2 = List.all diffs \x ->
-        Num.abs x > 0 && Num.abs x <= 3
-    (allPositive || allNegative) && lessThan2
+    lessThan4 = List.all diffs \x ->
+        Num.abs x > 0 && Num.abs x < 4
+    (allPositive || allNegative) && lessThan4
 
 
 permutations : List a -> List (List a)
