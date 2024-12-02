@@ -101,9 +101,11 @@ clean:
 
 
 # post an answer to the advent of code website and save it to answers.txt
-answer answer day=TODAY:
-  curl --fail-with-body -X POST -H "Cookie: {{COOKIE}}" \
-    -d "answer={{answer}}" \
+answer part answer day=TODAY:
+  curl --fail-with-body -X POST \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -H "Cookie: {{COOKIE}}" \
+    -d "answer={{answer}}&level={{part}}" \
     {{BASE_URL}}/day/{{day}}/answer \
   | pandoc -f html -t plain
   echo {{answer}} >> $(just day-dir {{day}})/answers.txt
