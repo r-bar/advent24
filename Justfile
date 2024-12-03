@@ -17,7 +17,7 @@ template-day num=TODAY: (mk-day-dir num) (template-readme num) (download-input n
 part1 num=TODAY: (template-day num)
 
 
-# Move on to part 2, update the readme with the part 2 text
+# Start part 2, update the readme with the part 2 text
 part2 num=TODAY: (template-readme num) && (git-add num)
 
 

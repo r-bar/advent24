@@ -4,34 +4,33 @@ import pf.Stdout
 import pf.File
 import pf.Arg
 
-
 main =
     args = Arg.list! {}
-    inputFile = when args is
-        [_progname, filename] -> filename
-        [progname, ..] -> crash "Usage: $(progname) <input_file>"
-        [] -> crash "unreachable"
+    inputFile =
+        when args is
+            [_progname, filename] -> filename
+            [progname, ..] -> crash "Usage: $(progname) <input_file>"
+            [] -> crash "unreachable"
     input = File.readUtf8! inputFile
-    answer = parseInput input
-      |> List.map diffLine
-      |> List.countIf safe
+    answer =
+        parseInput input
+        |> List.map diffLine
+        |> List.countIf safe
     Stdout.line! (Inspect.toStr answer)
-
 
 parseLine : Str -> List I64
 parseLine = \line ->
     Str.splitOn line " "
-    |> List.map \word -> when Str.toI64 word is
-        Ok i -> i
-        Err _ -> crash "invalid input"
-
+    |> List.map \word ->
+        when Str.toI64 word is
+            Ok i -> i
+            Err _ -> crash "invalid input"
 
 parseInput : Str -> List (List I64)
 parseInput = \input ->
     Str.splitOn input "\n"
     |> List.dropIf (\line -> line == "")
     |> List.map parseLine
-
 
 diffLine : List I64 -> List I64
 diffLine = \line ->
@@ -41,7 +40,6 @@ diffLine = \line ->
         [a, b, .. as rest] ->
             [b - a]
             |> List.concat (diffLine (List.prepend rest b))
-
 
 safe : List I64 -> Bool
 safe = \diffs ->

@@ -4,22 +4,20 @@ import pf.Stdout
 import pf.File
 import pf.Arg
 
-
 main =
     args = Arg.list! {}
-    inputFile = when args is
-        [_progname, filename] -> filename
-        [progname, ..] -> crash "Usage: $(progname) <input_file>"
-        [] -> crash "unreachable"
+    inputFile =
+        when args is
+            [_progname, filename] -> filename
+            [progname, ..] -> crash "Usage: $(progname) <input_file>"
+            [] -> crash "unreachable"
     input = File.readUtf8! inputFile
     answer = parseInput input
     Stdout.line! (Inspect.toStr answer)
 
-
 parseLine : Str -> List Str
 parseLine = \line ->
     Str.splitOn line " "
-
 
 parseInput : Str -> List List Str
 parseInput = \input ->
