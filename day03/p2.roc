@@ -62,22 +62,22 @@ parseIntHelp = \accum, input ->
 
 parseMul : Str -> ParseResult Expr
 parseMul = \input ->
-    { parsed: _prefix, rest: rest1 } = try parseLiteral input "mul("
+    { rest: rest1 } = try parseLiteral input "mul("
     { parsed: fstInt, rest: rest2 } = try parseInt rest1
-    { parsed: _, rest: rest3 } = try parseLiteral rest2 ","
+    { rest: rest3 } = try parseLiteral rest2 ","
     { parsed: sndInt, rest: rest4 } = try parseInt rest3
-    { parsed: _, rest: rest5 } = try parseLiteral rest4 ")"
+    { rest: rest5 } = try parseLiteral rest4 ")"
     Ok { parsed: Mul fstInt sndInt, rest: rest5 }
 
 parseDo : Str -> ParseResult Expr
 parseDo = \input ->
-    { parsed: _, rest: rest } = try parseLiteral input "do()"
-    Ok { parsed: Do, rest: rest }
+    { rest } = try parseLiteral input "do()"
+    Ok { parsed: Do, rest }
 
 parseDont : Str -> ParseResult Expr
 parseDont = \input ->
-    { parsed: _, rest: rest } = try parseLiteral input "don't()"
-    Ok { parsed: Dont, rest: rest }
+    { rest } = try parseLiteral input "don't()"
+    Ok { parsed: Dont, rest }
 
 parseFirst : List (Str -> ParseResult Expr) -> (Str -> ParseResult Expr)
 parseFirst = \parsers -> \input ->
