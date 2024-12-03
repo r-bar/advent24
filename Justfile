@@ -109,3 +109,8 @@ answer part answer day=TODAY:
     {{BASE_URL}}/day/{{day}}/answer \
   | pandoc -f html -t plain
   echo {{answer}} >> $(just day-dir {{day}})/answers.txt
+
+
+# open the advent of code website for the given day
+open day=TODAY:
+  xdg-open {{BASE_URL}}/day/{{day}}
