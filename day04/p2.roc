@@ -16,8 +16,10 @@ main =
     length = List.len grid
     width = List.first grid |> Result.withDefault [] |> List.len
     answer =
-        List.walk (List.range { start: At 0, end: Before length }) [] \accum, y ->
-            List.walk (List.range { start: At 0, end: Before width }) [] \rowAccum, x ->
+        ys = List.range { start: At 0, end: Before length }
+        List.walk ys [] \accum, y ->
+            xs = List.range { start: At 0, end: Before width }
+            List.walk xs [] \rowAccum, x ->
                 search grid (x, y) |> List.concat rowAccum
             |> List.concat accum
         # only used for display
@@ -47,9 +49,7 @@ needles = [
 ]
 
 matchers : List Matcher
-matchers = [
-    { genCoords: xCoords, match: matchXCoords }
-]
+matchers = [ xMatcher ]
 
 diagRCoords : Coord, U64 -> Result (List Coord) [OutOfBounds]
 diagRCoords = \(x, y), len ->
@@ -65,20 +65,21 @@ diagLCoords = \(x, y), len ->
         Ok (newX, y + i)
     |> Result.mapErr \_ -> OutOfBounds
 
-xCoords : Coord, U64 -> Result (List Coord) [OutOfBounds]
-xCoords = \(origX, origY), len ->
-    rightOrigX = origX + (len - 1)
-    left = try diagLCoords (rightOrigX, origY) len
-    right = try diagRCoords (origX, origY) len
-    Ok (List.join [left, right])
-
-matchXCoords : List U8, List U8 -> Bool
-matchXCoords = \haystack, needle ->
-    left = List.sublist haystack { start: 0, len: List.len needle }
-    right = List.sublist haystack { start: List.len needle, len: List.len needle }
-    (left == needle || List.reverse left == needle)
-    && (right == needle || List.reverse right == needle)
-    
+xMatcher : Matcher
+xMatcher = {
+    genCoords: \(origX, origY), len ->
+        rightOrigX = origX + (len - 1)
+        left = try diagLCoords (rightOrigX, origY) len
+        right = try diagRCoords (origX, origY) len
+        Ok (List.join [left, right])
+    ,
+    match: \haystack, needle ->
+        left = List.sublist haystack { start: 0, len: List.len needle }
+        right = List.sublist haystack { start: List.len needle, len: List.len needle }
+        (left == needle || List.reverse left == needle)
+        && (right == needle || List.reverse right == needle)
+    ,
+}
     
 getCoord : Grid, Coord -> Result U8 [OutOfBounds]
 getCoord = \grid, (x, y) ->
