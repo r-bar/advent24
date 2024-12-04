@@ -39,7 +39,7 @@ Coord : (U64, U64)
 Grid : List (List U8)
 Match : { coords : List Coord, content : List U8 }
 
-matches = [
+needles = [
     ['X', 'M', 'A', 'S'],
 ]
 
@@ -89,5 +89,5 @@ search = \grid, rootCoord ->
             getCoord grid coord
         Ok { coords: sliceCoords, content }
     |> List.keepIf \{ content } ->
-        List.contains matches content
-        || List.contains matches (List.reverse content)
+        List.contains needles content
+        || List.contains needles (List.reverse content)
