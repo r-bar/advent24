@@ -83,6 +83,7 @@ search = \grid, rootCoord ->
         diagRCoords,
     ]
     List.keepOks coordFns \genCoords ->
+        # TODO: the length of 4 should come from the needles
         genCoords rootCoord 4
     |> List.keepOks \sliceCoords ->
         content = try List.mapTry sliceCoords \coord ->

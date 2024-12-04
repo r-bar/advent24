@@ -88,6 +88,7 @@ getCoord = \grid, (x, y) ->
 search : Grid, Coord -> List Match
 search = \grid, rootCoord ->
     List.keepOks matchers \matcher ->
+        # TODO: the length of 3 should come from the needles
         coords = try matcher.genCoords rootCoord 3
         Ok { coords, matcher }
     #|> dbg
