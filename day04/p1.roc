@@ -43,27 +43,31 @@ matches = [
     ['X', 'M', 'A', 'S'],
 ]
 
-horizCoords : Coord, U64 -> List Coord
+horizCoords : Coord, U64 -> Result (List Coord) [OutOfBounds]
 horizCoords = \(x, y), len ->
     List.range { start: At 0, end: Before len }
     |> List.map (\i -> (x + i, y))
+    |> Ok
 
-vertCoords : Coord, U64 -> List Coord
+vertCoords : Coord, U64 -> Result (List Coord) [OutOfBounds]
 vertCoords = \(x, y), len ->
     List.range { start: At 0, end: Before len }
     |> List.map (\i -> (x, y + i))
+    |> Ok
 
-diagRCoords : Coord, U64 -> List Coord
+diagRCoords : Coord, U64 -> Result (List Coord) [OutOfBounds]
 diagRCoords = \(x, y), len ->
     List.range { start: At 0, end: Before len }
     |> List.map (\i -> (x + i, y + i))
+    |> Ok
 
-diagLCoords : Coord, U64 -> List Coord
+diagLCoords : Coord, U64 -> Result (List Coord) [OutOfBounds]
 diagLCoords = \(x, y), len ->
     List.range { start: At 0, end: Before len }
-    |> List.keepOks \i ->
+    |> List.mapTry \i ->
         newX = try Num.subChecked x i
         Ok (newX, y + i)
+    |> Result.mapErr \_ -> OutOfBounds
 
 getCoord : Grid, Coord -> Result U8 [OutOfBounds]
 getCoord = \grid, (x, y) ->
@@ -78,7 +82,7 @@ search = \grid, rootCoord ->
         diagLCoords,
         diagRCoords,
     ]
-    List.map coordFns \genCoords ->
+    List.keepOks coordFns \genCoords ->
         genCoords rootCoord 4
     |> List.keepOks \sliceCoords ->
         content = try List.mapTry sliceCoords \coord ->
